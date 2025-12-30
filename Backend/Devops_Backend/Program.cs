@@ -18,7 +18,7 @@ namespace Devops_Backend
             builder.Services.AddTransient<IRepository<Match>, Repository<Match>>();
             builder.Services.AddDbContext<Data.DevopsMainDbContext>(options =>
             {
-                options.UseSqlServer(builder.Configuration.GetConnectionString("DevopsDB"));
+                options.UseSqlServer(builder.Configuration["db:conn"]);
                 options.UseLazyLoadingProxies();
 
             });
@@ -31,7 +31,7 @@ namespace Devops_Backend
             {
                 options.AddPolicy("AllowAngular", policy =>
                 {
-                    policy.WithOrigins("http://localhost:4200")
+                    policy.WithOrigins(builder.Configuration["settings:frontend"] ?? "http://localhost:4200")
                           .AllowAnyHeader()
                           .AllowAnyMethod();
                 });

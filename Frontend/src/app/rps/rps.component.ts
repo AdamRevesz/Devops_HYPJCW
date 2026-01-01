@@ -1,14 +1,15 @@
 import { Component } from '@angular/core';
+import { ApiService } from '../api.service';
 import { Match } from '../match';
-import { ServicesService } from '../services.service';
+import { OnInit } from '@angular/core';
 
 @Component({
   selector: 'app-rps',
-  imports: [],
+  standalone: false,
   templateUrl: './rps.component.html',
   styleUrl: './rps.component.sass'
 })
-export class RPSComponent {
+export class RpsComponent implements OnInit{
   match: Match = new Match();
   player: string = '';
   enemy: string = '';
@@ -18,8 +19,13 @@ export class RPSComponent {
   results: string[] = [];
   gameOver: boolean = false;
   winner: string = '';
+  playedGames: Match[] = [];
 
-  constructor(private apiService: ServicesService) { }
+  constructor(private apiService: ApiService) { }
+
+  ngOnInit(): void {
+    this.getAllResults();
+  }
 
   bestOfThree(): void {
     if (this.match.enemyRounds == 2) {
@@ -85,6 +91,7 @@ export class RPSComponent {
         console.error('Error saving match:', error);
       }
     });
+    this.getAllResults();
   }
 
   createObject() {
@@ -108,5 +115,15 @@ export class RPSComponent {
     })
   }
 
-
+  getAllResults(){
+    this.apiService.getAllMatches().subscribe({
+      next: (response) => {
+        this.playedGames = response
+        console.log('History loaded in successfully')
+      },
+      error: (err) =>{
+        console.error('Failed to load data', err)
+      }
+    })
+  }
 }

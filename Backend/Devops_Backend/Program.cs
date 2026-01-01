@@ -37,6 +37,14 @@ namespace Devops_Backend
                 });
             });
 
+            if (builder.Environment.IsProduction())
+            {
+                builder.WebHost.ConfigureKestrel(options =>
+                {
+                    options.ListenAnyIP(int.Parse(builder.Configuration["settings:port"] ?? "6500"));
+                });
+            }
+
             var app = builder.Build();
 
 

@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { RPSComponent } from './rps.component';
+import { RpsComponent } from './rps.component';
 
-describe('RPSComponent', () => {
-  let component: RPSComponent;
-  let fixture: ComponentFixture<RPSComponent>;
+describe('RpsComponent', () => {
+  let component: RpsComponent;
+  let fixture: ComponentFixture<RpsComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [RPSComponent]
+      declarations: [RpsComponent]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(RPSComponent);
+    fixture = TestBed.createComponent(RpsComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

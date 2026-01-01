@@ -1,13 +1,11 @@
 import { Component } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
-import { RPSComponent } from "./rps/rps.component";
 
 @Component({
   selector: 'app-root',
-  imports: [RPSComponent],
   templateUrl: './app.component.html',
+  standalone: false,
   styleUrl: './app.component.sass'
 })
 export class AppComponent {
-  title = 'Devops_Frontend';
+  title = 'Frontend_Devops';
 }

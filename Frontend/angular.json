@@ -3,11 +3,18 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "Devops_Frontend": {
+    "Frontend_Devops": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
-          "style": "sass"
+          "style": "sass",
+          "standalone": false
+        },
+        "@schematics/angular:directive": {
+          "standalone": false
+        },
+        "@schematics/angular:pipe": {
+          "standalone": false
         }
       },
       "root": "",
@@ -17,7 +24,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:application",
           "options": {
-            "outputPath": "dist/devops-frontend",
+            "outputPath": "dist/frontend-devops",
             "index": "src/index.html",
             "browser": "src/main.ts",
             "polyfills": [
@@ -37,16 +44,13 @@
             ],
             "scripts": [],
             "server": "src/main.server.ts",
-            "outputMode": "static"
+            "outputMode": "server",
+            "ssr": {
+              "entry": "src/server.ts"
+            }
           },
           "configurations": {
             "production": {
-              "fileReplacements": [
-                {
-                  "replace": "src/environments/environment.ts",
-                  "with": "src/environments/environment.prod.ts"
-                }
-              ],
               "budgets": [
                 {
                   "type": "initial",
@@ -73,10 +77,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "buildTarget": "Devops_Frontend:build:production"
+              "buildTarget": "Frontend_Devops:build:production"
             },
             "development": {
-              "buildTarget": "Devops_Frontend:build:development"
+              "buildTarget": "Frontend_Devops:build:development"
             }
           },
           "defaultConfiguration": "development"

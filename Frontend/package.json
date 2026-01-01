@@ -1,5 +1,5 @@
 {
-  "name": "devops-frontend",
+  "name": "frontend-devops",
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
@@ -7,7 +7,7 @@
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
-    "serve:ssr:Devops_Frontend": "node dist/devops-frontend/server/server.mjs"
+    "serve:ssr:Frontend_Devops": "node dist/frontend-devops/server/server.mjs"
   },
   "private": true,
   "dependencies": {

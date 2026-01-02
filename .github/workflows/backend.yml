@@ -42,11 +42,11 @@ jobs:
 
   - name: Publish (Release, Linux)
     run: |
-      dotnet publish ${{ env.PROJECT_PATH }} \
-      -c Release \ 
-      -r ${{ env.RUNTIME }}
+     dotnet publish ${{ env.PROJECT_PATH }} \
+      -c Release \
+      -r ${{ env.RUNTIME }} \
       -p:PublishSingleFile=${{ env.PUBLISH_SINGLE_FILE }} \
-      --self-contained ${{ env.SELF_CONTAINED }}\
+      --self-contained ${{ env.SELF_CONTAINED }} \
       -o ${{ env.PUBLISH_DIR }}
 
   - name: Pack artifact (tar.gz)

@@ -18,7 +18,13 @@ namespace Devops_Backend
             builder.Services.AddTransient<IRepository<Match>, Repository<Match>>();
             builder.Services.AddDbContext<Data.DevopsMainDbContext>(options =>
             {
-                options.UseSqlServer(builder.Configuration["db:conn"]);
+                options.UseSqlServer(builder.Configuration["db:conn"], sqlServerOptions =>
+                {
+                    sqlServerOptions.EnableRetryOnFailure(
+                        maxRetryCount: 5,
+                        maxRetryDelay: TimeSpan.FromSeconds(30),
+                        errorNumbersToAdd: null);
+                });
                 options.UseLazyLoadingProxies();
 
             });

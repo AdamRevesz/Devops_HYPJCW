@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, Inject, PLATFORM_ID } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
 import { ApiService } from '../api.service';
 import { Match } from '../match';
 import { OnInit } from '@angular/core';
@@ -9,7 +10,7 @@ import { OnInit } from '@angular/core';
   templateUrl: './rps.component.html',
   styleUrl: './rps.component.sass'
 })
-export class RpsComponent implements OnInit{
+export class RpsComponent implements OnInit {
   match: Match = new Match();
   player: string = '';
   enemy: string = '';
@@ -21,10 +22,15 @@ export class RpsComponent implements OnInit{
   winner: string = '';
   playedGames: Match[] = [];
 
-  constructor(private apiService: ApiService) { }
+  constructor(
+    private apiService: ApiService,
+    @Inject(PLATFORM_ID) private platformId: Object
+  ) { }
 
   ngOnInit(): void {
-    this.getAllResults();
+    if (isPlatformBrowser(this.platformId)) {
+      this.getAllResults();
+    }
   }
 
   bestOfThree(): void {
@@ -86,12 +92,12 @@ export class RpsComponent implements OnInit{
         this.player = '';
         this.enemy = '';
         this.match = new Match();
+        this.getAllResults();
       },
       error: (error) => {
         console.error('Error saving match:', error);
       }
     });
-    this.getAllResults();
   }
 
   createObject() {
@@ -115,13 +121,13 @@ export class RpsComponent implements OnInit{
     })
   }
 
-  getAllResults(){
+  getAllResults() {
     this.apiService.getAllMatches().subscribe({
       next: (response) => {
         this.playedGames = response
         console.log('History loaded in successfully')
       },
-      error: (err) =>{
+      error: (err) => {
         console.error('Failed to load data', err)
       }
     })

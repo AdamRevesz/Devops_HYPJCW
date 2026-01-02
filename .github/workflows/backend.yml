@@ -9,7 +9,7 @@ jobs:
   runs-on: ubuntu-latest
   
   env:
-   PROJECT_PATH: Devops_Backend/Devops_Backend.csproj
+   PROJECT_PATH: Backend/Devops_Backend/Devops_Backend.csproj
    PUBLISH_DIR: publish
    RUNTIME: linux-x64
    SELF_CONTAINED: "true"

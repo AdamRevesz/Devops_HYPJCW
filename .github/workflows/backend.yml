@@ -59,13 +59,13 @@ jobs:
 
   - name: Upload package via SCP
     uses: appleboy/scp-action@v0.1.7
-      with:
-        host: ${{ env.SSH_HOST }}
-        username: ${{ env.SSH_USER }}
-        key: ${{ secrets.SSH_PASS }}
-        passphrase: ${{ secrets.SSH_PASS }}
-        source: "app-${{ github.sha }}.tar.gz"
-        target: "/tmp/"
+    with:
+      host: ${{ env.SSH_HOST }}
+      username: ${{ env.SSH_USER }}
+      key: ${{ secrets.SSH_PASS }}
+      passphrase: ${{ secrets.SSH_PASS }}
+      source: "app-${{ github.sha }}.tar.gz"
+      target: "/tmp/"
 
   - name: Deploy on server (atomic symlink switch + systemd retstart)
     uses: appleboy/ssh-action@v1.2.0

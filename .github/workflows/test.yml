@@ -99,7 +99,7 @@ jobs:
             # appsettings.json módosítása (db:conn + settings:frontend -> secretből)
             if command -v jq >/dev/null; then
               sudo jq \
-                --arg conn "${{ secrets.DB_CONN_Test }}" \
+                --arg conn "${{ secrets.DB_CONN_TEST }}" \
                 --arg frontend "${{ env.FRONTEND_URL }}" \
                 --arg port "${{ secrets.DESIRED_PORT }}" \
                 '.db.conn = $conn | .settings.frontend = $frontend | .settings.port = $port' \

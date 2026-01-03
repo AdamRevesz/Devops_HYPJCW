@@ -53,6 +53,22 @@ namespace Devops_Backend
 
             var app = builder.Build();
 
+            // Add this BEFORE app.Run() - creates database if it doesn't exist
+            using (var scope = app.Services.CreateScope())
+            {
+                var services = scope.ServiceProvider;
+                try
+                {
+                    var context = services.GetRequiredService<Data.DevopsMainDbContext>(); 
+                    context.Database.EnsureCreated();
+                                                     
+                }
+                catch (Exception ex)
+                {
+                    var logger = services.GetRequiredService<ILogger<Program>>();
+                    logger.LogError(ex, "An error occurred creating the database.");
+                }
+            }
 
 
             // Configure the HTTP request pipeline.

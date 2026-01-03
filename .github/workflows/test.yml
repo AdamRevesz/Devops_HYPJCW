@@ -14,7 +14,7 @@ jobs:
    RUNTIME: linux-x64
    SELF_CONTAINED: "true"
    PUBLISH_SINGLE_FILE: "true"
-   REMOTE_BASE: /var/backend
+   REMOTE_BASE: /var/backend/test
    REMOTE_RELEASES: /var/backend/test/releases
    REMOTE_CURRENT: /var/backend/test/current
    SERVICE_NAME: test.rpsbackend

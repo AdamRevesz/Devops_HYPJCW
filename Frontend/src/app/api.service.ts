@@ -2,18 +2,16 @@ import { Injectable } from '@angular/core';
 import { Match } from './match';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { ConfigService } from './config.service';
+import { enviroment } from '../environments/environments';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ApiService {
+  
+url = enviroment.backendUrl;
+constructor(private http: HttpClient) { }
 
-constructor(private http: HttpClient, private config: ConfigService) { }
-
-  private get url(): string {
-    return this.config.cfg.backendUrl || '';
-  }
 
   addResults(match: Match): Observable<Match>{
     return this.http.post<Match>(`${this.url}/api/Match`, match);

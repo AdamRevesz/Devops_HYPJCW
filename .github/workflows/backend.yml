@@ -9,7 +9,7 @@ jobs:
   runs-on: ubuntu-latest
   
   env:
-   PROJECT_PATH: Devops_Backend/Devops_Backend.csproj
+   PROJECT_PATH: Backend/Devops_Backend/Devops_Backend.csproj
    PUBLISH_DIR: publish
    RUNTIME: linux-x64
    SELF_CONTAINED: "true"
@@ -42,11 +42,11 @@ jobs:
 
   - name: Publish (Release, Linux)
     run: |
-      dotnet publish${{ env.PROJECT_PATH }} \
-      -c Release \ 
-      -r ${{ env.RUNTIME }}
+     dotnet publish ${{ env.PROJECT_PATH }} \
+      -c Release \
+      -r ${{ env.RUNTIME }} \
       -p:PublishSingleFile=${{ env.PUBLISH_SINGLE_FILE }} \
-      --self-contained ${{ env.SELF_CONTAINED }}\
+      --self-contained ${{ env.SELF_CONTAINED }} \
       -o ${{ env.PUBLISH_DIR }}
 
   - name: Pack artifact (tar.gz)
@@ -63,12 +63,12 @@ jobs:
     with:
       host: ${{ env.SSH_HOST }}
       username: ${{ env.SSH_USER }}
-      key: ${{ secrets.SSH_PASS }}
+      key: ${{ secrets.SSH_KEY }}           # ✅ FIXED - use SSH_KEY
       passphrase: ${{ secrets.SSH_PASS }}
       source: "app-${{ github.sha }}.tar.gz"
       target: "/tmp/"
 
-  - name: Deploy on server (atomic symlink switch + systemd retstart)
+  - name: Deploy on server (atomic symlink switch + systemd restart)
     uses: appleboy/ssh-action@v1.2.0
     with:
       host: ${{ env.SSH_HOST }}
@@ -76,20 +76,20 @@ jobs:
       key: ${{ secrets.SSH_KEY }}
       passphrase: ${{ secrets.SSH_PASS }}
       script: |
-        set-euo pipefail
+        set -euo pipefail
 
         SERVICE="${{ env.SERVICE_NAME }}"
         BASE="${{ env.REMOTE_BASE }}"
         RELEASES="${{ env.REMOTE_RELEASES }}"
         CURRENT="${{ env.REMOTE_CURRENT }}"
-        TS="$(date +$y$m$d$H$M$S) -${{ github.sha }}"
+        TS="$(date +%Y%m%d%H%M%S)-${{ github.sha }}"
         NEW_RELEASE="${RELEASES}/${TS}"
 
         sudo mkdir -p "$RELEASES"
         sudo mkdir -p "$BASE"
         sudo systemctl stop "$SERVICE"
 
-        sudo mkdir -p "NEW_RELEASE"
+        sudo mkdir -p "$NEW_RELEASE"
         sudo tar -xzf "/tmp/app-${{ github.sha }}.tar.gz" -C "$NEW_RELEASE"
         sudo rm -f "/tmp/app-${{ github.sha }}.tar.gz"
 
@@ -101,17 +101,17 @@ jobs:
             "$NEW_RELEASE/appsettings.json" | sudo tee "$NEW_RELEASE/appsettings.json.tmp" > /dev/null
           sudo mv "$NEW_RELEASE/appsettings.json.tmp" "$NEW_RELEASE/appsettings.json"
         else
-          echo "jq is not installed
+          echo "jq is not installed"
           exit 1
         fi
 
-        sudo ln -sfn "$NEW_RELEASE" "CURRENT"
+        sudo ln -sfn "$NEW_RELEASE" "$CURRENT"
 
         sudo systemctl daemon-reload || true
         sudo systemctl start "$SERVICE"
         sudo systemctl enable "$SERVICE" || true
 
-        COUNT=$ (ls -1dt "$RELEASES"/* | wc -1 || true)
+        COUNT=$(ls -1dt "$RELEASES"/* | wc -l || true)
         if [ "$COUNT" -gt 5 ]; then
           ls -1dt "$RELEASES"/* | tail -n +6 | xargs -r sudo rm -rf
         fi

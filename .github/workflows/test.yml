@@ -2,14 +2,13 @@ name: Deploy Backend to Test
 
 on:
   push:
-    branches: ["develop"]
+    branches: [ "develop" ]
 
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
 
     env:
-      # --- ÁLLÍTHATÓ ---
       PROJECT_PATH: Backend/Devops_Backend/Devops_Backend.csproj
       PUBLISH_DIR: publish
       RUNTIME: linux-x64
